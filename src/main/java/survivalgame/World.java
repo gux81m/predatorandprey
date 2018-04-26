@@ -3,10 +3,12 @@ package survivalgame;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import static survivalgame.SurvivalGameConstants.WORLD_HEIGHT;
@@ -15,6 +17,7 @@ import static survivalgame.SurvivalGameConstants.WORLD_WIDTH;
 public class World extends Application {
     private Pane root;
     private Temp temp;
+    private Obstacle obstacle;
 
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setScene(new Scene(createContent()));
@@ -36,6 +39,9 @@ public class World extends Application {
         temp.setVelocity(new Point2D(0, 1));
         addGameObject(temp,  500, 500);
 
+        obstacle = new Obstacle();
+        addGameObject(obstacle, 500, 700);
+
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -54,6 +60,16 @@ public class World extends Application {
 
     private void update() {
         temp.update();
+        if (temp.isCollidingWithViewArea(obstacle) && temp.isAlive()) {
+            temp.setVelocity(new Point2D(0, 0));
+            temp.setAlive(false);
+
+            System.out.println("temp x: " + temp.getBody().getTranslateX());
+            System.out.println("temp y: " + temp.getBody().getTranslateY());
+
+            System.out.println("osbt x: " + obstacle.getBody().getTranslateX());
+            System.out.println("osbt y: " + obstacle.getBody().getTranslateY());
+        }
     }
 
     private class Temp extends Entity {
@@ -71,6 +87,21 @@ public class World extends Application {
         }
 
         @Override public double getDistanceFromGameObject(GameObject object) {
+            return 0;
+        }
+    }
+
+    private class Obstacle extends GameObject {
+        private Node body;
+
+        Obstacle() {
+            super("obstacle");
+            body = new Circle(20, Color.BLACK);
+            super.addView(body);
+        }
+
+        @Override
+        public double getDistanceFromGameObject(GameObject object) {
             return 0;
         }
     }

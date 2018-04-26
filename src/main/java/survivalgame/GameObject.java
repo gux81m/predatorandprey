@@ -12,6 +12,7 @@ import static survivalgame.SurvivalGameConstants.TURN_SIZE;
 abstract class GameObject {
     private final String name;
     private ArrayList<Node> views = new ArrayList<>();
+    private Node body;
     private Point2D velocity = new Point2D(0, 0);
     private boolean isAlive = true;
 
@@ -25,6 +26,9 @@ abstract class GameObject {
 
     public void addView(Node view) {
         this.views.add(view);
+        if (views.size() == 1) {
+            body = views.get(0);
+        }
     }
 
     public ArrayList<Node> getViews() {
@@ -52,10 +56,6 @@ abstract class GameObject {
         views.forEach(view -> view.setTranslateY(view.getTranslateY() + velocity.getY()));
     }
 
-    public double getRotate() {
-        return views.get(0).getRotate() + 90;
-    }
-
     public void rotateRight() {
         rotate(TURN_SIZE);
     }
@@ -76,5 +76,13 @@ abstract class GameObject {
         setVelocity(newVelocity.multiply(getVelocity().magnitude()));
     }
 
-    abstract public double getDistanceFromGameObject(GameObject object);
+    public double getRotate() {
+        return body.getRotate() + 90;
+    }
+
+    public Node getBody() {
+        return body;
+    }
+
+    public abstract double getDistanceFromGameObject(GameObject object);
 }

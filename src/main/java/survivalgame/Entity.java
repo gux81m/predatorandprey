@@ -21,21 +21,20 @@ abstract class Entity extends GameObject {
         this.viewDistance = viewDistance;
         this.viewArea = new Circle(viewDistance, Color.GREEN);
         this.viewArea.setOpacity(0.2);
-        Line direction = new Line(body.getTranslateX(), body.getTranslateY(), body.getTranslateX(), body.getTranslateX() + viewDistance);
         super.addView(body);
         super.addView(viewArea);
-        super.addView(direction);
+        super.addView(new Line(body.getTranslateX(), body.getTranslateY(), body.getTranslateX(), body.getTranslateX() + viewDistance));
     }
 
     public Node getBody() {
         return body;
     }
 
-    public boolean isCollidingWithViewArea(Entity other) {
+    public boolean isCollidingWithViewArea(GameObject other) {
         return viewArea.getBoundsInParent().intersects(other.getBody().getBoundsInParent());
     }
 
-    public boolean isCollidingWithBody(Entity other) {
+    public boolean isCollidingWithBody(GameObject other) {
         return body.getBoundsInParent().intersects(other.getBody().getBoundsInParent());
     }
 
@@ -55,7 +54,7 @@ abstract class Entity extends GameObject {
 //        return false;
 //    }
 
-    abstract public double calculateFitness();
+    public abstract double calculateFitness();
 
-    abstract public boolean isInWorld();
+    public abstract boolean isInWorld();
 }
