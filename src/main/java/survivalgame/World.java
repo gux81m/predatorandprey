@@ -9,6 +9,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import static survivalgame.SurvivalGameConstants.WORLD_HEIGHT;
@@ -40,7 +41,7 @@ public class World extends Application {
         addGameObject(temp,  500, 500);
 
         obstacle = new Obstacle();
-        addGameObject(obstacle, 500, 700);
+        addGameObject(obstacle, 530, 700);
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -59,7 +60,6 @@ public class World extends Application {
     }
 
     private void update() {
-        temp.update();
         if (temp.isCollidingWithViewArea(obstacle) && temp.isAlive()) {
             temp.setVelocity(new Point2D(0, 0));
             temp.setAlive(false);
@@ -69,7 +69,11 @@ public class World extends Application {
 
             System.out.println("osbt x: " + obstacle.getBody().getTranslateX());
             System.out.println("osbt y: " + obstacle.getBody().getTranslateY());
+
+            System.out.println("direction: " + temp.getCollidingBodyDirection(obstacle));
+            System.out.println("distance: " + temp.getDistanceFromGameObject(obstacle));
         }
+        temp.update();
     }
 
     private class Temp extends Entity {
@@ -79,14 +83,6 @@ public class World extends Application {
         }
 
         @Override public double calculateFitness() {
-            return 0;
-        }
-
-        @Override public boolean isInWorld() {
-            return false;
-        }
-
-        @Override public double getDistanceFromGameObject(GameObject object) {
             return 0;
         }
     }

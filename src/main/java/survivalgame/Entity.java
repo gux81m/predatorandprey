@@ -31,11 +31,33 @@ abstract class Entity extends GameObject {
     }
 
     public boolean isCollidingWithViewArea(GameObject other) {
-        return viewArea.getBoundsInParent().intersects(other.getBody().getBoundsInParent());
+        double distanceBetweenObjects = getDistanceFromGameObject(other);
+        double ourRadius = ((Circle) viewArea).getRadius();
+        double otherRadius = ((Circle) other.getBody()).getRadius();
+        if (distanceBetweenObjects < ourRadius + otherRadius) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean isCollidingWithBody(GameObject other) {
-        return body.getBoundsInParent().intersects(other.getBody().getBoundsInParent());
+        double distanceBetweenObjects = getDistanceFromGameObject(other);
+        double ourRadius = ((Circle) body).getRadius();
+        double otherRadius = ((Circle) other.getBody()).getRadius();
+        if (distanceBetweenObjects < ourRadius + otherRadius) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Point2D getCollidingBodyDirection(GameObject object) {
+        return getVectorToOtherBody(object).normalize();
+    }
+
+    public double getCollidingBodyDistance(GameObject object) {
+        return getVectorToOtherBody(object).magnitude();
     }
 
 //    public double getDistanceFromGameObject(GameObject object) {
@@ -55,6 +77,4 @@ abstract class Entity extends GameObject {
 //    }
 
     public abstract double calculateFitness();
-
-    public abstract boolean isInWorld();
 }

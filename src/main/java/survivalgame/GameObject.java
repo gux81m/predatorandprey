@@ -2,6 +2,7 @@ package survivalgame;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 
@@ -27,7 +28,11 @@ abstract class GameObject {
     public void addView(Node view) {
         this.views.add(view);
         if (views.size() == 1) {
-            body = views.get(0);
+            if (Circle.class.equals(view.getClass())) {
+                body = view;
+            } else {
+                throw new RuntimeException("Body is not a Circle!");
+            }
         }
     }
 
@@ -84,5 +89,17 @@ abstract class GameObject {
         return body;
     }
 
-    public abstract double getDistanceFromGameObject(GameObject object);
+    public double getDistanceFromGameObject(GameObject object) {
+        return getVectorToOtherBody(object).magnitude();
+    }
+
+    public Point2D getVectorToOtherBody(GameObject other) {
+        double x = other.getBody().getTranslateX() - this.body.getTranslateX();
+        double y = other.getBody().getTranslateY() - this.body.getTranslateY();
+        return new Point2D(x, y);
+    }
+
+    public boolean isInWorld(){
+        return true;
+    };
 }
