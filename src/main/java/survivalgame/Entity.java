@@ -6,9 +6,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
-import static survivalgame.SurvivalGameConstants.WORLD_HEIGHT;
-import static survivalgame.SurvivalGameConstants.WORLD_WIDTH;
-
 abstract class Entity extends GameObject {
     private Node body;
     private Node viewArea;
@@ -31,7 +28,7 @@ abstract class Entity extends GameObject {
     }
 
     public boolean isCollidingWithViewArea(GameObject other) {
-        double distanceBetweenObjects = getDistanceFromGameObject(other);
+        double distanceBetweenObjects = getDistanceFromGameObjectCenter(other);
         double ourRadius = ((Circle) viewArea).getRadius();
         double otherRadius = ((Circle) other.getBody()).getRadius();
         if (distanceBetweenObjects < ourRadius + otherRadius) {
@@ -42,7 +39,7 @@ abstract class Entity extends GameObject {
     }
 
     public boolean isCollidingWithBody(GameObject other) {
-        double distanceBetweenObjects = getDistanceFromGameObject(other);
+        double distanceBetweenObjects = getDistanceFromGameObjectCenter(other);
         double ourRadius = ((Circle) body).getRadius();
         double otherRadius = ((Circle) other.getBody()).getRadius();
         if (distanceBetweenObjects < ourRadius + otherRadius) {
@@ -56,11 +53,11 @@ abstract class Entity extends GameObject {
         return getVectorToOtherBody(object).normalize();
     }
 
-    public double getCollidingBodyDistance(GameObject object) {
+    public double getCollidingBodyCenterDistance(GameObject object) {
         return getVectorToOtherBody(object).magnitude();
     }
 
-//    public double getDistanceFromGameObject(GameObject object) {
+//    public double getDistanceFromGameObjectCenter(GameObject object) {
 //        Point2D rocketPosition = new Point2D(this.getViews().getTranslateX(), this.getViews().getTranslateY());
 //        Point2D targetPosition = new Point2D(object.getViews().getTranslateX(), object.getViews().getTranslateY());
 //        return targetPosition.distance(rocketPosition);

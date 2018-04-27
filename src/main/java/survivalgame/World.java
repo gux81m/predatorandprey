@@ -9,7 +9,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import static survivalgame.SurvivalGameConstants.WORLD_HEIGHT;
@@ -41,7 +40,7 @@ public class World extends Application {
         addGameObject(temp,  500, 500);
 
         obstacle = new Obstacle();
-        addGameObject(obstacle, 530, 700);
+        addGameObject(obstacle, 490, 700);
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -60,18 +59,22 @@ public class World extends Application {
     }
 
     private void update() {
-        if (temp.isCollidingWithViewArea(obstacle) && temp.isAlive()) {
-            temp.setVelocity(new Point2D(0, 0));
-            temp.setAlive(false);
-
+        if (temp.isCollidingWithBody(obstacle) && temp.isAlive()) {
             System.out.println("temp x: " + temp.getBody().getTranslateX());
             System.out.println("temp y: " + temp.getBody().getTranslateY());
+            System.out.println("temp position: " + temp.getPosition().normalize());
+            System.out.println("temp velocity: " + temp.getVelocity().normalize());
+            System.out.println("angle: " + temp.getVelocity().angle(temp.getVectorToOtherBody(obstacle)));
+            System.out.println("angle: " + temp.getAngleBetweenVelocityAndCollidingObject(obstacle));
 
             System.out.println("osbt x: " + obstacle.getBody().getTranslateX());
             System.out.println("osbt y: " + obstacle.getBody().getTranslateY());
 
             System.out.println("direction: " + temp.getCollidingBodyDirection(obstacle));
-            System.out.println("distance: " + temp.getDistanceFromGameObject(obstacle));
+            System.out.println("distance: " + temp.getDistanceFromGameObjectCenter(obstacle));
+
+            temp.setAlive(false);
+            temp.setVelocity(new Point2D(0, 0));
         }
         temp.update();
     }
@@ -97,7 +100,7 @@ public class World extends Application {
         }
 
         @Override
-        public double getDistanceFromGameObject(GameObject object) {
+        public double getDistanceFromGameObjectCenter(GameObject object) {
             return 0;
         }
     }

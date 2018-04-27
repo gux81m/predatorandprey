@@ -5,6 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Transform;
 
 import java.util.ArrayList;
 
@@ -89,7 +90,7 @@ abstract class GameObject {
         return body;
     }
 
-    public double getDistanceFromGameObject(GameObject object) {
+    public double getDistanceFromGameObjectCenter(GameObject object) {
         return getVectorToOtherBody(object).magnitude();
     }
 
@@ -97,6 +98,21 @@ abstract class GameObject {
         double x = other.getBody().getTranslateX() - this.body.getTranslateX();
         double y = other.getBody().getTranslateY() - this.body.getTranslateY();
         return new Point2D(x, y);
+    }
+
+    public Point2D getPosition() {
+        double x = this.body.getTranslateX();
+        double y = this.body.getTranslateY();
+        return new Point2D(x, y);
+    }
+
+    public double getAngleBetweenVelocityAndCollidingObject(GameObject object) {
+        Point2D vectorToOtherBody = getVectorToOtherBody(object);
+        double dotProduct = this.velocity.dotProduct(this.getVectorToOtherBody(object));
+        double determinant = this.velocity.getX() * vectorToOtherBody.getY() - this.velocity.getY() * vectorToOtherBody.getX();
+        double angleInRadiant = Math.atan2(determinant, dotProduct);
+        double angleInDegrees = Math.toDegrees(angleInRadiant);
+        return angleInDegrees > 0 ? angleInDegrees : 360 + angleInDegrees;
     }
 
     public boolean isInWorld(){
