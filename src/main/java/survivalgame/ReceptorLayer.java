@@ -27,10 +27,11 @@ public class ReceptorLayer {
     }
 
     /**
-     *  receptorMatrix = sensitivityMatrix * inputMatrix(T)
+     * receptorMatrix = sensitivityMatrix * inputMatrix(T)
      * @param inputsFromWorld (angle, distance)
+     * @return receptor matrix
      */
-    public void calculateReceptorActivities(Map<Double, Double> inputsFromWorld) {
+    public double[] calculateReceptorActivities(Map<Double, Double> inputsFromWorld) {
         calculateInputMatrix(inputsFromWorld);
         printMatrix("Sensitivity matrix", sensitivityMatrix);
         printMatrix("Input matrix", inputMatrix);
@@ -38,10 +39,10 @@ public class ReceptorLayer {
             receptorMatrix[index] = sensitivityMatrix[index] * inputMatrix[index];
         }
         printMatrix("Receptor matrix", receptorMatrix);
+        return receptorMatrix;
     }
 
     /**
-     *
      * @param inputsFromWorld (angle, distance)
      */
     private void calculateInputMatrix(Map<Double, Double> inputsFromWorld) {
@@ -49,7 +50,7 @@ public class ReceptorLayer {
         inputsFromWorld.forEach((angle, distance) -> {
             int receptorIndex = calculateReceptorIndex(angle);
             this.inputMatrix[receptorIndex] = distance;
-            System.out.println("Angle: " + angle + ",receptor index: " + receptorIndex + ", distance: " + distance);
+            System.out.println("Angle: " + angle + ", receptor index: " + receptorIndex + ", distance: " + distance);
         });
     }
 
@@ -61,7 +62,12 @@ public class ReceptorLayer {
 
     private int calculateReceptorIndex(double angle) {
         int receptorIndex = 0;
-        // TODO: calculate receptor index
+        while (angle > receptorIndex * degreesBetweenReceptors + degreesBetweenReceptors / 2) {
+            receptorIndex++;
+        }
+        if (receptorIndex >= receptorCount) {
+            receptorIndex = 0;
+        }
         return receptorIndex;
     }
 

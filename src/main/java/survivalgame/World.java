@@ -43,7 +43,7 @@ public class World extends Application {
         addGameObject(temp,  500, 500);
 
         obstacle = new Obstacle();
-        addGameObject(obstacle, 538, 700);
+        addGameObject(obstacle, 539, 700);
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
