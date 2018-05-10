@@ -11,6 +11,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static survivalgame.SurvivalGameConstants.WORLD_HEIGHT;
 import static survivalgame.SurvivalGameConstants.WORLD_WIDTH;
 
@@ -40,7 +43,7 @@ public class World extends Application {
         addGameObject(temp,  500, 500);
 
         obstacle = new Obstacle();
-        addGameObject(obstacle, 490, 700);
+        addGameObject(obstacle, 538, 700);
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -65,13 +68,19 @@ public class World extends Application {
             System.out.println("temp position: " + temp.getPosition().normalize());
             System.out.println("temp velocity: " + temp.getVelocity().normalize());
             System.out.println("angle: " + temp.getVelocity().angle(temp.getVectorToOtherBody(obstacle)));
-            System.out.println("angle: " + temp.getAngleBetweenVelocityAndCollidingObject(obstacle));
+            double angle = temp.getAngleBetweenVelocityAndCollidingObject(obstacle);
+            System.out.println("angle: " + angle);
 
             System.out.println("osbt x: " + obstacle.getBody().getTranslateX());
             System.out.println("osbt y: " + obstacle.getBody().getTranslateY());
 
             System.out.println("direction: " + temp.getCollidingBodyDirection(obstacle));
-            System.out.println("distance: " + temp.getDistanceFromGameObjectCenter(obstacle));
+            double distance = temp.getDistanceFromGameObjectCenter(obstacle);
+            System.out.println("distance: " + distance);
+
+            Map<Double, Double> inputsFromWorld = new HashMap<>();
+            inputsFromWorld.put(angle, distance);
+            temp.calculateReceptorActivities(inputsFromWorld);
 
             temp.setAlive(false);
             temp.setVelocity(new Point2D(0, 0));
@@ -97,6 +106,7 @@ public class World extends Application {
             super("obstacle");
             body = new Circle(20, Color.BLACK);
             super.addView(body);
+            System.out.println(super.getName() + " game object created.");
         }
 
         @Override

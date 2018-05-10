@@ -6,10 +6,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
+import java.util.Map;
+
+import static survivalgame.SurvivalGameConstants.RECEPTOR_NUMBER;
+
 abstract class Entity extends GameObject {
     private Node body;
     private Node viewArea;
     private double viewDistance;
+    private ReceptorLayer receptorLayer;
 
     public Entity(String name, double bodySize, double viewDistance, Color bodyColor) {
         super(name);
@@ -21,6 +26,8 @@ abstract class Entity extends GameObject {
         super.addView(body);
         super.addView(viewArea);
         super.addView(new Line(body.getTranslateX(), body.getTranslateY(), body.getTranslateX(), body.getTranslateX() + viewDistance));
+        this.receptorLayer = new ReceptorLayer(RECEPTOR_NUMBER);
+        System.out.println(name + " entity created.");
     }
 
     public Node getBody() {
@@ -47,6 +54,10 @@ abstract class Entity extends GameObject {
         } else {
             return false;
         }
+    }
+
+    public void calculateReceptorActivities(Map<Double, Double> inputsFromWorld) {
+        receptorLayer.calculateReceptorActivities(inputsFromWorld);
     }
 
     public Point2D getCollidingBodyDirection(GameObject object) {
