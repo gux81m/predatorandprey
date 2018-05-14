@@ -55,7 +55,7 @@ public class World extends Application {
         return root;
     }
 
-    private void addGameObject(GameObject object, double x, double y) {
+    private void addGameObject(ActiveGameObject object, double x, double y) {
         object.getViews().forEach(view -> view.setTranslateX(x));
         object.getViews().forEach(view -> view.setTranslateY(y));
         root.getChildren().addAll(object.getViews());
@@ -99,7 +99,7 @@ public class World extends Application {
         }
     }
 
-    private class Obstacle extends GameObject {
+    private class Obstacle extends ActiveGameObject {
         private Node body;
 
         Obstacle() {
@@ -110,7 +110,7 @@ public class World extends Application {
         }
 
         @Override
-        public double getDistanceFromGameObjectCenter(GameObject object) {
+        public double getDistanceFromGameObjectCenter(ActiveGameObject object) {
             return 0;
         }
     }

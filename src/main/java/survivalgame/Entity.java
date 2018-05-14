@@ -10,7 +10,7 @@ import java.util.Map;
 
 import static survivalgame.SurvivalGameConstants.RECEPTOR_NUMBER;
 
-abstract class Entity extends GameObject {
+abstract class Entity extends ActiveGameObject {
     private Node body;
     private Node viewArea;
     private double viewDistance;
@@ -34,7 +34,7 @@ abstract class Entity extends GameObject {
         return body;
     }
 
-    public boolean isCollidingWithViewArea(GameObject other) {
+    public boolean isCollidingWithViewArea(ActiveGameObject other) {
         double distanceBetweenObjects = getDistanceFromGameObjectCenter(other);
         double ourRadius = ((Circle) viewArea).getRadius();
         double otherRadius = ((Circle) other.getBody()).getRadius();
@@ -45,7 +45,7 @@ abstract class Entity extends GameObject {
         }
     }
 
-    public boolean isCollidingWithBody(GameObject other) {
+    public boolean isCollidingWithBody(ActiveGameObject other) {
         double distanceBetweenObjects = getDistanceFromGameObjectCenter(other);
         double ourRadius = ((Circle) body).getRadius();
         double otherRadius = ((Circle) other.getBody()).getRadius();
@@ -60,15 +60,15 @@ abstract class Entity extends GameObject {
         receptorLayer.calculateReceptorActivities(inputsFromWorld);
     }
 
-    public Point2D getCollidingBodyDirection(GameObject object) {
+    public Point2D getCollidingBodyDirection(ActiveGameObject object) {
         return getVectorToOtherBody(object).normalize();
     }
 
-    public double getCollidingBodyCenterDistance(GameObject object) {
+    public double getCollidingBodyCenterDistance(ActiveGameObject object) {
         return getVectorToOtherBody(object).magnitude();
     }
 
-//    public double getDistanceFromGameObjectCenter(GameObject object) {
+//    public double getDistanceFromGameObjectCenter(ActiveGameObject object) {
 //        Point2D rocketPosition = new Point2D(this.getViews().getTranslateX(), this.getViews().getTranslateY());
 //        Point2D targetPosition = new Point2D(object.getViews().getTranslateX(), object.getViews().getTranslateY());
 //        return targetPosition.distance(rocketPosition);

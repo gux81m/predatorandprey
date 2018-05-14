@@ -5,20 +5,21 @@ import javafx.scene.Node;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Transform;
 
 import java.util.ArrayList;
 
 import static survivalgame.SurvivalGameConstants.TURN_SIZE;
+import static survivalgame.SurvivalGameConstants.WORLD_HEIGHT;
+import static survivalgame.SurvivalGameConstants.WORLD_WIDTH;
 
-abstract class GameObject {
+abstract class ActiveGameObject {
     private final String name;
     private ArrayList<Node> views = new ArrayList<>();
     private Node body;
     private Point2D velocity = new Point2D(0, 0);
     private boolean isAlive = true;
 
-    GameObject(String name) {
+    ActiveGameObject(String name) {
         this.name = name;
     }
 
@@ -90,11 +91,11 @@ abstract class GameObject {
         return body;
     }
 
-    public double getDistanceFromGameObjectCenter(GameObject object) {
+    public double getDistanceFromGameObjectCenter(ActiveGameObject object) {
         return getVectorToOtherBody(object).magnitude();
     }
 
-    public Point2D getVectorToOtherBody(GameObject other) {
+    public Point2D getVectorToOtherBody(ActiveGameObject other) {
         double x = other.getBody().getTranslateX() - this.body.getTranslateX();
         double y = other.getBody().getTranslateY() - this.body.getTranslateY();
         return new Point2D(x, y);
@@ -106,7 +107,7 @@ abstract class GameObject {
         return new Point2D(x, y);
     }
 
-    public double getAngleBetweenVelocityAndCollidingObject(GameObject object) {
+    public double getAngleBetweenVelocityAndCollidingObject(ActiveGameObject object) {
         Point2D vectorToOtherBody = getVectorToOtherBody(object);
         double dotProduct = this.velocity.dotProduct(this.getVectorToOtherBody(object));
         double determinant = this.velocity.getX() * vectorToOtherBody.getY() - this.velocity.getY() * vectorToOtherBody.getX();
@@ -115,7 +116,16 @@ abstract class GameObject {
         return angleInDegrees > 0 ? angleInDegrees : 360 + angleInDegrees;
     }
 
-    public boolean isInWorld(){
-        return true;
-    };
+    public boolean isInWorld() {
+        double bodyRadius = ((Circle) this.body).getRadius();
+        Point2D bodyPosition = getPosition();
+        if (bodyPosition.getX() + bodyRadius > WORLD_WIDTH |
+            bodyPosition.getX() - bodyRadius < 0 |
+            bodyPosition.getY() + bodyRadius > WORLD_HEIGHT |
+            bodyPosition.getY() - bodyRadius < 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
